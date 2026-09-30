@@ -98,18 +98,21 @@ form.addEventListener("submit", async (event) => {
     }
 
     // Populate metadata
+    const uploader = data.uploader || {};
+    const stats = data.stats || {};
+    const downloads = data.downloads || {};
+
     resultCover.src = data.cover || "";
-    uploaderAvatar.src = data.uploader.avatar || "https://www.tiktok.com/favicon.ico";
-    uploaderName.textContent = data.uploader.name || "TikTok User";
-    uploaderHandle.textContent = data.uploader.username ? `@${data.uploader.username}` : "";
+    uploaderAvatar.src = uploader.avatar || "https://www.tiktok.com/favicon.ico";
+    uploaderName.textContent = uploader.name || "TikTok User";
+    uploaderHandle.textContent = uploader.username ? `@${uploader.username}` : "";
     resultTitle.textContent = data.title || "TikTok Video";
 
-    statLikes.textContent = `❤️ ${formatNumber(data.stats.likes)}`;
-    statViews.textContent = `👁️ ${formatNumber(data.stats.views)}`;
-    statComments.textContent = `💬 ${formatNumber(data.stats.comments)}`;
+    statLikes.textContent = `❤️ ${formatNumber(stats.likes)}`;
+    statViews.textContent = `👁️ ${formatNumber(stats.views)}`;
+    statComments.textContent = `💬 ${formatNumber(stats.comments)}`;
 
     // Populate buttons
-    const { downloads } = data;
 
     if (data.type === "video") {
       if (downloads.noWatermark) {
@@ -151,10 +154,17 @@ form.addEventListener("submit", async (event) => {
       downloads.images.forEach((imgObj, idx) => {
         const item = document.createElement("div");
         item.className = "gallery-item";
-        item.innerHTML = `
-          <img src="${imgObj.url}" alt="Slide ${idx + 1}">
-          <a class="btn-download btn-primary" href="${imgObj.downloadUrl}">Unduh #${idx + 1}</a>
-        `;
+        const img = document.createElement("img");
+        img.src = imgObj.url;
+        img.alt = `Slide ${idx + 1}`;
+        img.loading = "lazy";
+
+        const link = document.createElement("a");
+        link.className = "btn-download btn-primary";
+        link.href = imgObj.downloadUrl;
+        link.textContent = `Unduh #${idx + 1}`;
+
+        item.append(img, link);
         galleryGrid.appendChild(item);
       });
     }
