@@ -5,6 +5,14 @@ build/
 # Local configuration file (sdk path, etc)
 local.properties
 
+# Node
+node_modules/
+.vercel
+.env
+.env.*
+npm-debug.log*
+yarn-error.log*
+
 # Log/OS Files
 *.log
 
